@@ -35,9 +35,6 @@ final class ChatsTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupLayout()
-        
-        contentView.addSubview(usernameLabel)
-        contentView.addSubview(userMessageLabel)
     }
     
     required init?(coder: NSCoder) {
@@ -63,15 +60,16 @@ final class ChatsTableViewCell: UITableViewCell {
     private func setupUsernameLabelLayout() {
         contentView.addSubview(usernameLabel)
         
-        usernameLabel.leadingAnchor.constraint(equalTo: usernameLabel.trailingAnchor, constant: Metrics.doubleModule).isActive = true
+        usernameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: Metrics.doubleModule).isActive = true
         usernameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.module).isActive = true
-        usernameLabel.topAnchor.constraint(equalTo: usernameLabel.topAnchor, constant: Metrics.halfModule).isActive = true
+        usernameLabel.topAnchor.constraint(equalTo: userImageView.topAnchor, constant: Metrics.halfModule).isActive = true
     }
     
     private func setupUserMessageLabelLayout() {
         contentView.addSubview(userMessageLabel)
         
         userMessageLabel.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor).isActive = true
+        userMessageLabel.trailingAnchor.constraint(equalTo: usernameLabel.trailingAnchor).isActive = true
         userMessageLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: Metrics.halfModule).isActive = true
     }
     
