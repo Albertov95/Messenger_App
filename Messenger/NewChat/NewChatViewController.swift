@@ -1,9 +1,13 @@
 import UIKit
 import JGProgressHUD
 
+protocol NewChatsViewControllerDelegate: AnyObject {
+    func newChatItemTapped(searchResult: SearchResult)
+}
+
 final class NewChatsViewController: UIViewController {
     
-    var completion: ((SearchResult) -> (Void))? 
+    weak var delegate: NewChatsViewControllerDelegate?
     
     private let spinner = JGProgressHUD(style: .dark)
     
@@ -107,7 +111,7 @@ extension NewChatsViewController: UITableViewDelegate {
         let targetUserData = results[indexPath.row]
         
         self.dismiss(animated: false) { [weak self] in
-            self?.completion?(targetUserData)
+            self?.delegate?.newChatItemTapped(searchResult: targetUserData)
         }
     }
     

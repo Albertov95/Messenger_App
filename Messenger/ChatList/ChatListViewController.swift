@@ -93,9 +93,7 @@ final class ChatListViewController: UIViewController {
     @objc
     private func newChatButtonTapped() {
         let vc = NewChatsViewController()
-        vc.completion = { [weak self] result in
-            self?.createNewChatViewController(result: result)
-        }
+        vc.delegate = self
         let navigationController = UINavigationController(rootViewController: vc)
         navigationController.modalPresentationStyle = .formSheet
         present(navigationController, animated: false)
@@ -109,6 +107,30 @@ final class ChatListViewController: UIViewController {
         vc.title = name
         
         navigationController?.pushViewController(vc, animated: false)
+    }
+    
+    private func openConversation(id: String, email: String, title: String) {
+        let vc = ChatViewController(with: email, id: id)
+        vc.title = title
+        navigationController?.pushViewController(vc, animated: false)
+    }
+}
+
+// MARK: - NewChatsViewControllerDelegate
+extension ChatListViewController: NewChatsViewControllerDelegate {
+    
+    func newChatItemTapped(searchResult: SearchResult) {
+        if let targetConversation = conversations.first(
+            where: { $0.otherUserEmail == searchResult.email.safeEmail }
+        ) {
+            openConversation(
+                id: targetConversation.id,
+                email: targetConversation.otherUserEmail,
+                title: searchResult.name
+            )
+        } else {
+            createNewChatViewController(result: searchResult)
+        }
     }
 }
 
@@ -143,9 +165,7 @@ extension ChatListViewController: UITableViewDelegate {
         
         let model = conversations[indexPath.row]
         
-        let vc = ChatViewController(with: model.otherUserEmail, id: model.id)
-        vc.title = "NewChat"
-        navigationController?.pushViewController(vc, animated: false)
+        openConversation(id: model.id, email: model.otherUserEmail, title: model.name)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -42,7 +42,7 @@ extension DatabaseManager {
         let safeEmail = email.safeEmail
         
         database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
-            guard snapshot.value as? String != nil else {
+            guard snapshot.value as? [String: Any] != nil else {
                 completion(false)
                 return
             }
@@ -105,7 +105,7 @@ extension DatabaseManager {
 
 // MARK: - Conversations
 extension DatabaseManager {
-    
+
     func createNewConversation(
         with otherUserEmail: String,
         name: String,
@@ -117,7 +117,7 @@ extension DatabaseManager {
         else {
             return
         }
-        
+         
         let safeEmail = currentEmail.safeEmail
         let reference = database.child("\(safeEmail)")
         
@@ -146,8 +146,8 @@ extension DatabaseManager {
             
             let newConversationData: [String: Any] = [
                 "id": conversationId,
-                "other_user_email": safeEmail,
-                "name": "Self",
+                "other_user_email": otherUserEmail,
+                "name": name,
                 "latest_message": [
                     "date": dateString,
                     "message": message,
@@ -169,7 +169,7 @@ extension DatabaseManager {
             self.database.child("\(otherUserEmail)/conversations").observeSingleEvent(of: .value) { snapshot in
                 if var conversations = snapshot.value as? [[String: Any]] {
                     conversations.append(recipient_newConversationData)
-                    self.database.child("\(otherUserEmail)/conversations").setValue([conversationId])
+                    self.database.child("\(otherUserEmail)/conversations").setValue(conversations)
                 } else {
                     self.database.child("\(otherUserEmail)/conversations").setValue([recipient_newConversationData])
                 }

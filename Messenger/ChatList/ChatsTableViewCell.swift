@@ -71,6 +71,7 @@ final class ChatsTableViewCell: UITableViewCell {
         userMessageLabel.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor).isActive = true
         userMessageLabel.trailingAnchor.constraint(equalTo: usernameLabel.trailingAnchor).isActive = true
         userMessageLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: Metrics.halfModule).isActive = true
+        userMessageLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Metrics.doubleModule).isActive = true
     }
     
     // MARK: - Configure

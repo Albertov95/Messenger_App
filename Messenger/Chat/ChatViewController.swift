@@ -272,6 +272,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             ) { [weak self] success in
                 guard success else { return }
                 self?.isNewConversation = false
+                inputBar.inputTextView.text = nil
             }
         } else {
             guard let conversationId = conversationId, let name = self.title else {
@@ -284,9 +285,8 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 name: name,
                 newMessage: message
             ) { success in
-                if !success {
-                    print("failed to send message")
-                }
+                guard success else { return }
+                inputBar.inputTextView.text = nil
             }
         }
     }
