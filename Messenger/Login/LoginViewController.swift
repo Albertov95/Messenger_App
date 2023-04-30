@@ -180,6 +180,7 @@ final class LoginViewController: UIViewController {
     @objc
     private func registerButtonTapped() {
         let vc = RegisterViewController()
+        vc.delegate = self
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: false)
     }
@@ -193,5 +194,12 @@ extension LoginViewController: UITextFieldDelegate {
             loginButtonTapped()
         }
         return true
+    }
+}
+
+extension LoginViewController: RegisterViewControllerDelegate {
+    
+    func registrationDidFinished() {
+        dismiss(animated: true)
     }
 }

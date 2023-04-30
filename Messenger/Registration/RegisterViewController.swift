@@ -1,7 +1,13 @@
 import UIKit
 import FirebaseAuth
 
+protocol RegisterViewControllerDelegate: AnyObject {
+    func registrationDidFinished()
+}
+
 final class RegisterViewController: UIViewController {
+    
+    weak var delegate: RegisterViewControllerDelegate?
     
     private let mainView = RegisterView()
     
@@ -58,23 +64,23 @@ final class RegisterViewController: UIViewController {
         }
         
         DatabaseManager.shared.checkUserExists(email: email) { [weak self] exists in
-            guard let strongSelf = self else { return }
+            guard let self = self else { return }
             
             guard !exists else {
-                strongSelf.showAlert(title: "Ошибка", message: "Такой пользователь уже существует")
+                self.showAlert(title: "Ошибка", message: "Такой пользователь уже существует")
                 return
             }
             
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { result, error in
                 guard result != nil, error == nil else {
-                    strongSelf.showAlert(title: "Произошла ошибка регистрации", message: "Error")
+                    self.showAlert(title: "Произошла ошибка регистрации", message: "Error")
                     return
                 }
                 
                 let chatUser = User(firstName: username, emailAddress: email)
                 DatabaseManager.shared.insertUser(with: chatUser) { success in
                     if success {
-                        guard let image = strongSelf.mainView.userImageView.image,
+                        guard let image = self.mainView.userImageView.image,
                               let data = image.pngData() else {
                             return
                         }
@@ -91,7 +97,8 @@ final class RegisterViewController: UIViewController {
                         }
                     }
                 }
-                strongSelf.dismiss(animated: true)
+                self.dismiss(animated: true)
+                self.delegate?.registrationDidFinished()
             }
         }
     }

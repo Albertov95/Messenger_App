@@ -16,16 +16,17 @@ final class ProfileViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        mainView.email = FirebaseAuth.Auth.auth().currentUser?.email
-        
         mainView.logOutButton.setTitle("Log Out", for: .normal)
         mainView.logOutButton.addTarget(self, action: #selector(buttonTapped), for: .touchDown)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        fetchUserImage()
+        updateUserData()
     }
     
     // MARK: - Private methods
-    
     @objc
     private func buttonTapped() {
         let alert = UIAlertController(title: "Выйти из аккаунта?", message: "Выберите", preferredStyle: .alert)
@@ -45,6 +46,11 @@ final class ProfileViewController: UIViewController {
         alert.addAction(okActionYes)
         alert.addAction(okActionNo)
         present(alert, animated: false)
+    }
+    
+    private func updateUserData() {
+        mainView.email = FirebaseAuth.Auth.auth().currentUser?.email
+        fetchUserImage()
     }
 }
 

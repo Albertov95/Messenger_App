@@ -8,14 +8,6 @@ import AVKit
 
 final class ChatViewController: MessagesViewController {
     
-    private lazy var dateFormatter: DateFormatter = {
-        let formattre = DateFormatter()
-        formattre.dateStyle = .medium
-        formattre.timeStyle = .long
-        formattre.locale = .current
-        return formattre
-    }()
-    
     private var sender: Sender? {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
@@ -27,6 +19,8 @@ final class ChatViewController: MessagesViewController {
             displayName: "Me"
         )
     }
+    
+    private let dataController = ChatDataController()
     
     private let spinner = JGProgressHUD(style: .dark)
     
@@ -70,8 +64,9 @@ final class ChatViewController: MessagesViewController {
     
     private func setupInputButton() {
         let button = InputBarButtonItem()
-        button.setSize(CGSize(width: 35, height: 35), animated: false)
-        button.setImage(UIImage(named: "plus"), for: .normal)
+        button.setSize(CGSize(width: 36, height: 36), animated: false)
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.tintColor = .black
         button.onTouchUpInside { [weak self] _ in
             self?.presentInputActionSheet()
         }
@@ -103,7 +98,9 @@ final class ChatViewController: MessagesViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         messageInputBar.inputTextView.becomeFirstResponder()
+        
         if let conversationId = conversationId {
             listenForMessages(id: conversationId, shouldScrollToBottom: true)
         }
@@ -218,31 +215,20 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     ) {
         picker.dismiss(animated: true)
 
-        guard let messageId = createMessageId(),
-              let conversationId = conversationId,
+        guard let conversationId = conversationId,
               let name = self.title,
               let sender = sender
         else {
             return
         }
         
-        if let image = info[.editedImage] as? UIImage, let imageData = image.pngData() {
-            uploadMessagePhoto(
-                messageId: messageId,
-                imageData: imageData,
-                name: name,
-                sender: sender,
-                conversationId: conversationId
-            )
-        } else if let videoUrl = info[.mediaURL] as? URL {
-            uploadMessageVideo(
-                url: videoUrl,
-                messageId: messageId,
-                name: name,
-                sender: sender,
-                conversationId: conversationId
-            )
-        }
+        dataController.uploadMedia(
+            info: info,
+            name: name,
+            sender: sender,
+            conversationId: conversationId,
+            otherUserEmail: otherUserEmail
+        )
     }
 }
 
@@ -251,150 +237,23 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
-              let sender = self.sender,
-              let messageId = createMessageId()
+              let sender = sender
         else {
             return
         }
         
-        let message = Message(
+        dataController.sendNewMessage(
             sender: sender,
-            messageId: messageId,
-            sentDate: Date(),
-            kind: .text(text)
-        )
-        
-        if isNewConversation {
-            DatabaseManager.shared.createNewConversation(
-                with: otherUserEmail,
-                name: self.title ?? "User",
-                firstMessage: message
-            ) { [weak self] success in
-                guard success else { return }
-                self?.isNewConversation = false
-                inputBar.inputTextView.text = nil
-            }
-        } else {
-            guard let conversationId = conversationId, let name = self.title else {
-                return
-            }
-            
-            DatabaseManager.shared.sendMessage(
-                to: conversationId,
-                otherUserEmail: otherUserEmail,
-                name: name,
-                newMessage: message
-            ) { success in
-                guard success else { return }
-                inputBar.inputTextView.text = nil
-            }
-        }
-    }
-}
-
-// MARK: - Message
-extension ChatViewController {
-    
-    private func createMessageId() -> String? {
-        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {
-            return nil
+            text: text,
+            otherUserEmail: otherUserEmail,
+            isNewConversation: isNewConversation,
+            title: title,
+            conversationId: conversationId
+        ) { [weak self] in
+            self?.isNewConversation = false
         }
         
-        let safeCurrentEmail = currentUserEmail.safeEmail
-        let dateString = dateFormatter.string(from: Date())
-        let newIdentifier = "\(otherUserEmail)_\(safeCurrentEmail)_\(dateString)"
-
-        return newIdentifier
-    }
-    
-    private func uploadMessagePhoto(
-        messageId: String,
-        imageData: Data,
-        name: String,
-        sender: Sender,
-        conversationId: String
-    ) {
-        let fileName = "photo_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".png"
-        
-        StorageManager.shared.uploadMessagePhoto(with: imageData, fileName: fileName) { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let urlString):
-                guard let url = URL(string: urlString),
-                      let placeholder = UIImage(systemName: "plus")
-                else {
-                    return
-                }
-                
-                let media = Media(url: url, image: nil, placeholderImage: placeholder, size: .zero)
-                
-                let message = Message(
-                    sender: sender,
-                    messageId: messageId,
-                    sentDate: Date(),
-                    kind: .photo(media)
-                )
-                
-                DatabaseManager.shared.sendMessage(
-                    to: conversationId,
-                    otherUserEmail: self.otherUserEmail,
-                    name: name,
-                    newMessage: message
-                ) { success in
-                    if !success {
-                        print("failed to send photo message")
-                    }
-                }
-            case .failure(let error):
-                print("message photo upload error: \(error)")
-            }
-        }
-    }
-    
-    private func uploadMessageVideo(
-        url: URL,
-        messageId: String,
-        name: String,
-        sender: Sender,
-        conversationId: String
-    ) {
-        let fileName = "photo_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".mov"
-        
-        StorageManager.shared.uploadMessageVideo(with: url, fileName: fileName) { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let urlString):
-                guard let url = URL(string: urlString),
-                      let placeholder = UIImage(systemName: "plus")
-                else {
-                    return
-                }
-                
-                let media = Media(url: url, image: nil, placeholderImage: placeholder, size: .zero)
-                
-                let message = Message(
-                    sender: sender,
-                    messageId: messageId,
-                    sentDate: Date(),
-                    kind: .video(media)
-                )
-                
-                DatabaseManager.shared.sendMessage(
-                    to: conversationId,
-                    otherUserEmail: self.otherUserEmail,
-                    name: name,
-                    newMessage: message
-                ) { success in
-                    if !success {
-                        print("failed to send photo message")
-                    }
-                }
-            case .failure(let error):
-                print("message photo upload error: \(error)")
-            }
-        }
+        inputBar.inputTextView.text = nil
     }
 }
 

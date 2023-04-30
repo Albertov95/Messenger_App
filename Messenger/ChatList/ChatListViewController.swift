@@ -21,13 +21,13 @@ final class ChatListViewController: UIViewController {
         setupNavigationItem()
         setupTableView()
         setupTableViewLayout()
-        fetchConversations()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         showLoginScreenIfNeeded()
+        fetchConversations()
     }
     
     // MARK: - Private methods
@@ -67,17 +67,16 @@ final class ChatListViewController: UIViewController {
             
             switch result {
             case .success(let conversations):
-                guard !conversations.isEmpty else {
-                    return
-                }
+                guard !conversations.isEmpty else { return }
                 
                 self.conversations = conversations
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
             case .failure(let error):
                 print("failed to get conversations: \(error)")
+                self.conversations = []
+            }
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
         }
     }
