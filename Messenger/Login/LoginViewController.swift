@@ -115,40 +115,35 @@ final class LoginViewController: UIViewController {
             UserDefaults.standard.set(firstName, forKey: "name")
             
             DatabaseManager.shared.checkUserExists(email: email) { exists in
-                if !exists {
+                guard !exists else { return }
+                
+                let chatUser = User(
+                    firstName: firstName,
+                    emailAddress: email
+                )
+                DatabaseManager.shared.insertUser(with: chatUser) { success in
+                    guard success,
+                          user.profile?.hasImage == true,
+                          let url = user.profile?.imageURL(withDimension: 200)
+                    else { return }
                     
-                    let chatUser = User(firstName: firstName,
-                                               emailAddress: email)
-                    DatabaseManager.shared.insertUser(with: chatUser) { success in
-                        if success {
-                            
-                            if user.profile?.hasImage == true {
-                                guard let url = user.profile?.imageURL(withDimension: 200) else {
-                                    return
-                                }
-                                
-                                URLSession.shared.dataTask(with: url, completionHandler: { data, _,_ in
-                                    guard let data = data else {
-                                        print("Failed to get data from facebook")
-                                        return
-                                    }
-                                    
-                                    print("got data from FB, uploading")
-                                    
-                                    let filename = chatUser.profilePictureFileName
-                                    StorageManager.shared.uploadProfilePicture(with: data, fileName: filename, completion: { result in
-                                        switch result {
-                                        case .success(let downloadUrl):
-                                            UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-                                            print(downloadUrl)
-                                        case .failure(let error):
-                                            print("Storage manager error: \(error)")
-                                        }
-                                    })
-                                }).resume()
+                    URLSession.shared.dataTask(with: url, completionHandler: { data, _,_ in
+                        guard let data = data else {
+                            print("Failed to get data from facebook")
+                            return
+                        }
+                        
+                        let filename = chatUser.profilePictureFileName
+                        StorageManager.shared.uploadProfilePicture(with: data, fileName: filename) { result in
+                            switch result {
+                            case .success(let downloadUrl):
+                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                print(downloadUrl)
+                            case .failure(let error):
+                                print("Storage manager error: \(error)")
                             }
                         }
-                    }
+                    }).resume()
                 }
             }
             
