@@ -79,9 +79,7 @@ final class RegisterViewController: UIViewController {
     
     @objc
     private func loginButtonTapped() {
-        let vc = LoginViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: false)
+        dismiss(animated: false)
     }
     
     private func showAlert(title: String, message: String) {
