@@ -3,6 +3,8 @@ import FirebaseAuth
 import JGProgressHUD
 
 final class ChatListViewController: UIViewController {
+    
+    weak var coordinator: ChatFlowCoordinator?
 
     private var conversations = [Conversation]()
 
@@ -26,7 +28,6 @@ final class ChatListViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        showLoginScreenIfNeeded()
         fetchConversations()
     }
     
@@ -81,37 +82,22 @@ final class ChatListViewController: UIViewController {
         }
     }
     
-    private func showLoginScreenIfNeeded() {
-        if FirebaseAuth.Auth.auth().currentUser == nil {
-            let vc = LoginViewController()
-            vc.modalPresentationStyle = .fullScreen
-            present(vc, animated: false)
-        }
-    }
-    
     @objc
     private func newChatButtonTapped() {
-        let vc = NewChatsViewController()
-        vc.delegate = self
-        let navigationController = UINavigationController(rootViewController: vc)
-        navigationController.modalPresentationStyle = .formSheet
-        present(navigationController, animated: false)
+        coordinator?.newChatButtonDidTapped(delegate: self)
     }
     
     private func createNewChatViewController(result: SearchResult) {
-        let name = result.name
-        let email = result.email
-        
-        let vc = ChatViewController(with: email, id: nil, isNewConversation: true)
-        vc.title = name
-        
-        navigationController?.pushViewController(vc, animated: false)
+        coordinator?.chatItemDidTapped(
+            email: result.email,
+            id: nil,
+            title: result.name,
+            isNewConversation: true
+        )
     }
     
     private func openConversation(id: String, email: String, title: String) {
-        let vc = ChatViewController(with: email, id: id)
-        vc.title = title
-        navigationController?.pushViewController(vc, animated: false)
+        coordinator?.chatItemDidTapped(email: email, id: id, title: title)
     }
 }
 

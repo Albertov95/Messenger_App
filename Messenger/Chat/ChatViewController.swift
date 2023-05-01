@@ -31,7 +31,7 @@ final class ChatViewController: MessagesViewController {
     private var messages = [Message]()
     
     // MARK: - Init
-    init(with email: String, id: String?, isNewConversation: Bool = false) {
+    init(with email: String, id: String?, isNewConversation: Bool) {
         self.conversationId = id
         self.otherUserEmail = email
         self.isNewConversation = isNewConversation

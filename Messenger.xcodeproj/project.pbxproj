@@ -14,6 +14,8 @@
 		247E75AA29FE123F00074BEC /* ChatDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75A929FE123F00074BEC /* ChatDataController.swift */; };
 		247E75AC29FE4C8800074BEC /* RegisterDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AB29FE4C8800074BEC /* RegisterDataController.swift */; };
 		247E75AE29FF209D00074BEC /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AD29FF209D00074BEC /* Notifications.swift */; };
+		247E75B029FF508000074BEC /* LoginCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AF29FF508000074BEC /* LoginCoordinator.swift */; };
+		247E75B229FF50F100074BEC /* ChatFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75B129FF50F100074BEC /* ChatFlowCoordinator.swift */; };
 		24B8DF5F29FB9A2E00AAF134 /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8DF5E29FB9A2E00AAF134 /* PhotoViewerViewController.swift */; };
 		24D77248295D286A00C82FE4 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D77247295D286A00C82FE4 /* RegisterViewController.swift */; };
 		24D7724A295D289300C82FE4 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D77249295D289300C82FE4 /* RegisterView.swift */; };
@@ -54,6 +56,8 @@
 		247E75A929FE123F00074BEC /* ChatDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDataController.swift; sourceTree = "<group>"; };
 		247E75AB29FE4C8800074BEC /* RegisterDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterDataController.swift; sourceTree = "<group>"; };
 		247E75AD29FF209D00074BEC /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		247E75AF29FF508000074BEC /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
+		247E75B129FF50F100074BEC /* ChatFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFlowCoordinator.swift; sourceTree = "<group>"; };
 		24B8DF5E29FB9A2E00AAF134 /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
 		24D77247295D286A00C82FE4 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		24D77249295D289300C82FE4 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
@@ -154,6 +158,7 @@
 			children = (
 				24F4BDE52961131E0084F300 /* ChatListViewController.swift */,
 				24F4BDEB296290C80084F300 /* ChatsTableViewCell.swift */,
+				247E75B129FF50F100074BEC /* ChatFlowCoordinator.swift */,
 			);
 			path = ChatList;
 			sourceTree = "<group>";
@@ -217,6 +222,7 @@
 				E96C6A5C293A385300EF604A /* LoginWithGoogleView.swift */,
 				E98E88D129364C0600B4C2B6 /* LoginViewController.swift */,
 				E9E4787E293E468C00FF7127 /* LoginView.swift */,
+				247E75AF29FF508000074BEC /* LoginCoordinator.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -351,6 +357,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				247E75B029FF508000074BEC /* LoginCoordinator.swift in Sources */,
 				24F6C6BB29F0C735003146C5 /* StorageManager.swiff.swift in Sources */,
 				24D77248295D286A00C82FE4 /* RegisterViewController.swift in Sources */,
 				F852C6F129FB492900AD45C7 /* MainTabBarController.swift in Sources */,
@@ -377,6 +384,7 @@
 				E96C6A532938EE6400EF604A /* Metrics.swift in Sources */,
 				247E75AE29FF209D00074BEC /* Notifications.swift in Sources */,
 				E98E88BA29364BCD00B4C2B6 /* AppDelegate.swift in Sources */,
+				247E75B229FF50F100074BEC /* ChatFlowCoordinator.swift in Sources */,
 				F852C6DD29FB29E700AD45C7 /* SearchResult.swift in Sources */,
 				247E75AC29FE4C8800074BEC /* RegisterDataController.swift in Sources */,
 				F852C6ED29FB39D900AD45C7 /* MessageKind+String.swift in Sources */,

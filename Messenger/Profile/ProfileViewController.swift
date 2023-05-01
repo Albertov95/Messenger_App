@@ -4,6 +4,8 @@ import GoogleSignIn
 
 final class ProfileViewController: UIViewController {
     
+    weak var coordinator: LoginFlowCoordinator?
+    
     private let mainView = ProfileView()
     
     // MARK: - Lifecycle
@@ -37,9 +39,7 @@ final class ProfileViewController: UIViewController {
             
             do {
                 try FirebaseAuth.Auth.auth().signOut()
-                let vc = LoginViewController()
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: false)
+                self.coordinator?.start()
             } catch {}
         }
         let okActionNo = UIAlertAction(title: "Нет", style: .default, handler: nil)
