@@ -140,7 +140,7 @@ extension ChatDataController {
         isNewConversation: Bool,
         title: String?,
         conversationId: String?,
-        createNewChatCompletion: @escaping () -> Void
+        createNewChatCompletion: @escaping (String) -> Void
     ) {
         guard let messageId = createMessageId(otherUserEmail: otherUserEmail) else { return }
         
@@ -158,7 +158,7 @@ extension ChatDataController {
                 firstMessage: message
             ) { success in
                 guard success else { return }
-                createNewChatCompletion()
+                createNewChatCompletion(messageId)
             }
         } else {
             guard let conversationId = conversationId, let name = title else {
@@ -179,8 +179,8 @@ extension ChatDataController {
             return nil
         }
         
-        let safeCurrentEmail = currentUserEmail.safeEmail
-        let dateString = dateFormatter.string(from: Date())
+        let safeCurrentEmail = currentUserEmail.safe
+        let dateString = dateFormatter.string(from: Date()).safe
         let newIdentifier = "\(otherUserEmail)_\(safeCurrentEmail)_\(dateString)"
 
         return newIdentifier

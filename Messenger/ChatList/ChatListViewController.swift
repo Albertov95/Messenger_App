@@ -62,7 +62,7 @@ final class ChatListViewController: UIViewController {
             return
         }
 
-        DatabaseManager.shared.getAllConversations(for: email.safeEmail) { [weak self] result in
+        DatabaseManager.shared.getAllConversations(for: email.safe) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -120,7 +120,7 @@ extension ChatListViewController: NewChatsViewControllerDelegate {
     
     func newChatItemTapped(searchResult: SearchResult) {
         if let targetConversation = conversations.first(
-            where: { $0.otherUserEmail == searchResult.email.safeEmail }
+            where: { $0.otherUserEmail == searchResult.email.safe }
         ) {
             openConversation(
                 id: targetConversation.id,

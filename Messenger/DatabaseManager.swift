@@ -39,7 +39,7 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     func checkUserExists(email: String, completion: @escaping (Bool) -> Void) {
-        let safeEmail = email.safeEmail
+        let safeEmail = email.safe
         
         database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
             guard snapshot.value as? [String: Any] != nil else {
@@ -118,7 +118,7 @@ extension DatabaseManager {
             return
         }
          
-        let safeEmail = currentEmail.safeEmail
+        let safeEmail = currentEmail.safe
         let reference = database.child("\(safeEmail)")
         
         reference.observeSingleEvent(of: .value) { [weak self] snapshot in
@@ -236,7 +236,7 @@ extension DatabaseManager {
             return
         }
         
-        let currentUserEmail = myEmail.safeEmail
+        let currentUserEmail = myEmail.safe
         
         let collectionMessage: [String: Any] = [
             "id": firstMessage.messageId,
@@ -324,7 +324,7 @@ extension DatabaseManager {
             return
         }
         
-        let currentEmail = myEmail.safeEmail
+        let currentEmail = myEmail.safe
 
         database.child("\(conversation)/messages").observeSingleEvent(of: .value) { [weak self] snapshot, _ in
             guard let self = self else { return }
@@ -359,7 +359,7 @@ extension DatabaseManager {
                 return
             }
             
-            let currentUserEmail = myEmail.safeEmail
+            let currentUserEmail = myEmail.safe
             
             let newMessageEnrty: [String: Any] = [
                 "id": newMessage.messageId,

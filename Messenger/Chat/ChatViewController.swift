@@ -15,7 +15,7 @@ final class ChatViewController: MessagesViewController {
 
         return Sender(
             photoURL: "",
-            senderId: email.safeEmail,
+            senderId: email.safe,
             displayName: "Me"
         )
     }
@@ -25,7 +25,7 @@ final class ChatViewController: MessagesViewController {
     private let spinner = JGProgressHUD(style: .dark)
     
     private let otherUserEmail: String
-    private let conversationId: String?
+    private var conversationId: String?
     
     private var isNewConversation = false
     private var messages = [Message]()
@@ -249,8 +249,13 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             isNewConversation: isNewConversation,
             title: title,
             conversationId: conversationId
-        ) { [weak self] in
-            self?.isNewConversation = false
+        ) { [weak self] messageId in
+            guard let self = self else { return }
+            
+            self.isNewConversation = false
+            let newConversationId = "conversation_\(messageId)"
+            self.conversationId = newConversationId
+            self.listenForMessages(id: newConversationId, shouldScrollToBottom: true)
         }
         
         inputBar.inputTextView.text = nil
@@ -267,7 +272,10 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         fatalError("sender is nil, email should be cached")
     }
     
-    func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessageKit.MessagesCollectionView) -> MessageType {
+    func messageForItem(
+        at indexPath: IndexPath,
+        in messagesCollectionView: MessageKit.MessagesCollectionView
+    ) -> MessageType {
         messages[indexPath.section]
     }
     

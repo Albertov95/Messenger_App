@@ -23,6 +23,18 @@ final class LoginViewController: UIViewController {
         
         view.addSubview(spinner)
         
+        setupView()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(loginDidFinish),
+            name: Notifications.loginDidFinish,
+            object: nil
+        )
+    }
+    
+    // MARK: - Private methods
+    private func setupView() {
         mainView.loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchDown)
         mainView.loginButton.setTitle("Login", for: .normal)
         
@@ -39,6 +51,11 @@ final class LoginViewController: UIViewController {
         mainView.loginButton.setTitle("Login", for: .normal)
         
         mainView.socialNetworksView.googleButton.addTarget(self, action: #selector(googleSignInButtonTapped), for: .touchDown)
+    }
+    
+    @objc
+    private func loginDidFinish() {
+        dismiss(animated: true)
     }
     
     @objc
@@ -69,13 +86,13 @@ final class LoginViewController: UIViewController {
                 return
             }
 
-            let safeEmail = email.safeEmail
+            let safeEmail = email.safe
             
             DatabaseManager.shared.getDataFor(path: safeEmail) { result in
                 switch result{
                 case .success(let data):
                     guard let userData = data as? [String: Any],
-                        let firstName = userData["first_name"] as? String
+                          let firstName = userData["first_name"] as? String
                     else {
                         return
                     }
@@ -88,7 +105,7 @@ final class LoginViewController: UIViewController {
             
             UserDefaults.standard.set(email, forKey: "email")
             
-            self.dismiss(animated: false)
+            NotificationCenter.default.post(name: Notifications.loginDidFinish, object: nil)
         }
     }
     
@@ -175,7 +192,6 @@ final class LoginViewController: UIViewController {
     @objc
     private func registerButtonTapped() {
         let vc = RegisterViewController()
-        vc.delegate = self
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: false)
     }
@@ -189,12 +205,5 @@ extension LoginViewController: UITextFieldDelegate {
             loginButtonTapped()
         }
         return true
-    }
-}
-
-extension LoginViewController: RegisterViewControllerDelegate {
-    
-    func registrationDidFinished() {
-        dismiss(animated: true)
     }
 }

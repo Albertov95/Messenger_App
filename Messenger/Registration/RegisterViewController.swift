@@ -1,16 +1,12 @@
 import UIKit
 import FirebaseAuth
 
-protocol RegisterViewControllerDelegate: AnyObject {
-    func registrationDidFinished()
-}
-
 final class RegisterViewController: UIViewController {
     
-    weak var delegate: RegisterViewControllerDelegate?
-    
     private let mainView = RegisterView()
+    private let dataController = RegisterDataController()
     
+    // MARK: - Lifecycle
     override func loadView() {
         view = mainView
     }
@@ -19,6 +15,8 @@ final class RegisterViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        
+        dataController.delegate = self
         
         let tapGesture = UITapGestureRecognizer()
         tapGesture.addTarget(self, action: #selector(userImageViewTapped))
@@ -31,7 +29,7 @@ final class RegisterViewController: UIViewController {
         mainView.registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchDown)
         mainView.registerButton.setTitle("Register", for: .normal)
         
-        mainView.loginButton.addTarget(self, action: #selector(openScreen), for: .touchDown)
+        mainView.loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchDown)
         
         mainView.emailTextField.autocapitalizationType = .none
         mainView.passwordTextField.autocapitalizationType = .none
@@ -43,6 +41,7 @@ final class RegisterViewController: UIViewController {
         mainView.passwordTextField.delegate = self
     }
 
+    // MARK: - Private methods
     @objc
     private func registerButtonTapped() {
         guard let username = mainView.usernameTextField.text,
@@ -63,44 +62,27 @@ final class RegisterViewController: UIViewController {
             return
         }
         
-        DatabaseManager.shared.checkUserExists(email: email) { [weak self] exists in
+        dataController.registerUser(
+            email: email,
+            username: username,
+            password: password,
+            image: mainView.userImageView.image
+        ) { [weak self] email in
             guard let self = self else { return }
             
-            guard !exists else {
-                self.showAlert(title: "Ошибка", message: "Такой пользователь уже существует")
-                return
-            }
+            UserDefaults.standard.set(email, forKey: "email")
             
-            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { result, error in
-                guard result != nil, error == nil else {
-                    self.showAlert(title: "Произошла ошибка регистрации", message: "Error")
-                    return
-                }
-                
-                let chatUser = User(firstName: username, emailAddress: email)
-                DatabaseManager.shared.insertUser(with: chatUser) { success in
-                    if success {
-                        guard let image = self.mainView.userImageView.image,
-                              let data = image.pngData() else {
-                            return
-                        }
-                        
-                        let filename = chatUser.profilePictureFileName
-                        StorageManager.shared.uploadProfilePicture(with: data, fileName: filename) { result in
-                            switch result {
-                            case .success(let downloadUrl):
-                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-                                print(downloadUrl)
-                            case .failure(let error):
-                                print("Storage manager error: \(error)")
-                            }
-                        }
-                    }
-                }
-                self.dismiss(animated: true)
-                self.delegate?.registrationDidFinished()
-            }
+            self.dismiss(animated: true)
+            
+            NotificationCenter.default.post(name: Notifications.loginDidFinish, object: nil)
         }
+    }
+    
+    @objc
+    private func loginButtonTapped() {
+        let vc = LoginViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: false)
     }
     
     private func showAlert(title: String, message: String) {
@@ -109,16 +91,20 @@ final class RegisterViewController: UIViewController {
         alert.addAction(okAction)
         present(alert, animated: false, completion: nil)
     }
+}
+
+// MARK: - Image picker
+extension RegisterViewController {
     
     @objc
     private func userImageViewTapped() {
         let actionSheet = UIAlertController(title: "Выберите изображение", message: nil, preferredStyle: .actionSheet)
         
-        let cameraAction = UIAlertAction(title: "Сделать при помощи камеры", style: .default) { _ in
-            self.showCamera()
+        let cameraAction = UIAlertAction(title: "Сделать при помощи камеры", style: .default) { [weak self] _ in
+            self?.showCamera()
         }
-        let galleryAction = UIAlertAction(title: "Добавить из галереи", style: .default) { _ in
-            self.showGallery()
+        let galleryAction = UIAlertAction(title: "Добавить из галереи", style: .default) { [weak self] _ in
+            self?.showGallery()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
@@ -143,15 +129,11 @@ final class RegisterViewController: UIViewController {
         picker.delegate = self
         present(picker, animated: false)
     }
-    
-    @objc func openScreen() {
-        let vc = LoginViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: false)
-    }
 }
 
+// MARK: - UIImagePickerControllerDelegate
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
     func imagePickerController(
         _ picker: UIImagePickerController,
         didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
@@ -166,7 +148,9 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     }
 }
 
+// MARK: - UITextFieldDelegate
 extension RegisterViewController: UITextFieldDelegate {
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == mainView.usernameTextField {
             mainView.emailTextField.becomeFirstResponder()
@@ -176,5 +160,17 @@ extension RegisterViewController: UITextFieldDelegate {
             registerButtonTapped()
         }
         return true
+    }
+}
+
+// MARK: - RegisterDataControllerDelegate
+extension RegisterViewController: RegisterDataControllerDelegate {
+    
+    func handleUserExistsRegistrationError() {
+        showAlert(title: "Ошибка", message: "Пользователь уже существует")
+    }
+    
+    func handleRegistrationError() {
+        showAlert(title: "Ошибка", message: "Произошла ошибка регистрации")
     }
 }

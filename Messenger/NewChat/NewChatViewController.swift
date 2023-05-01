@@ -155,6 +155,7 @@ extension NewChatsViewController {
                     self.filterUsers(with: query)
                 case .failure(let error):
                     print("failed to get users: \(error)")
+                    self.spinner.dismiss()
                 }
             }
         }
@@ -165,7 +166,7 @@ extension NewChatsViewController {
             return
         }
         
-        let safeEmail = currentUserEmail.safeEmail
+        let safeEmail = currentUserEmail.safe
         
         self.spinner.dismiss()
         

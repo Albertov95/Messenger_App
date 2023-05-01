@@ -62,7 +62,7 @@ extension ProfileViewController {
             return
         }
         
-        let safeEmail = email.safeEmail
+        let safeEmail = email.safe
         let filename = safeEmail + "_profile_picture.png"
         
         let path = "images/" + filename

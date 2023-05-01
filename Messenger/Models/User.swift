@@ -4,7 +4,7 @@ struct User {
     }
     
     var safeEmail: String {
-        emailAddress.safeEmail
+        emailAddress.safe
     }
     
     let firstName: String

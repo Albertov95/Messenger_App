@@ -11,7 +11,9 @@
 		240967C6296508CB00DE3863 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240967C5296508CB00DE3863 /* ProfileView.swift */; };
 		24783BD629664EE1008349D0 /* NewChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24783BD529664EE1008349D0 /* NewChatViewController.swift */; };
 		24783BDB2966561E008349D0 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24783BDA2966561E008349D0 /* ChatViewController.swift */; };
-		24783BDD2966562D008349D0 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24783BDC2966562D008349D0 /* ChatView.swift */; };
+		247E75AA29FE123F00074BEC /* ChatDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75A929FE123F00074BEC /* ChatDataController.swift */; };
+		247E75AC29FE4C8800074BEC /* RegisterDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AB29FE4C8800074BEC /* RegisterDataController.swift */; };
+		247E75AE29FF209D00074BEC /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AD29FF209D00074BEC /* Notifications.swift */; };
 		24B8DF5F29FB9A2E00AAF134 /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8DF5E29FB9A2E00AAF134 /* PhotoViewerViewController.swift */; };
 		24D77248295D286A00C82FE4 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D77247295D286A00C82FE4 /* RegisterViewController.swift */; };
 		24D7724A295D289300C82FE4 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D77249295D289300C82FE4 /* RegisterView.swift */; };
@@ -49,7 +51,9 @@
 		240967C5296508CB00DE3863 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		24783BD529664EE1008349D0 /* NewChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatViewController.swift; sourceTree = "<group>"; };
 		24783BDA2966561E008349D0 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
-		24783BDC2966562D008349D0 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		247E75A929FE123F00074BEC /* ChatDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDataController.swift; sourceTree = "<group>"; };
+		247E75AB29FE4C8800074BEC /* RegisterDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterDataController.swift; sourceTree = "<group>"; };
+		247E75AD29FF209D00074BEC /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		24B8DF5E29FB9A2E00AAF134 /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
 		24D77247295D286A00C82FE4 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		24D77249295D289300C82FE4 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
@@ -128,8 +132,9 @@
 		24783BD9296655F2008349D0 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				24B8DF5E29FB9A2E00AAF134 /* PhotoViewerViewController.swift */,
 				24783BDA2966561E008349D0 /* ChatViewController.swift */,
-				24783BDC2966562D008349D0 /* ChatView.swift */,
+				247E75A929FE123F00074BEC /* ChatDataController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 			children = (
 				24D77247295D286A00C82FE4 /* RegisterViewController.swift */,
 				24D77249295D289300C82FE4 /* RegisterView.swift */,
+				247E75AB29FE4C8800074BEC /* RegisterDataController.swift */,
 			);
 			path = Registration;
 			sourceTree = "<group>";
@@ -182,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				E96C6A58293A383600EF604A /* PersonalDataViewFactory.swift */,
-				E96C6A5C293A385300EF604A /* LoginWithGoogleView.swift */,
 				E9E4787C293E464000FF7127 /* Login */,
 				24D77246295D280000C82FE4 /* Registration */,
 				F852C6DB29FB29DC00AD45C7 /* Models */,
@@ -194,8 +199,6 @@
 				E98E88BB29364BCD00B4C2B6 /* SceneDelegate.swift */,
 				24D92B3529F13CDD007CF86A /* DatabaseManager.swift */,
 				24F6C6BA29F0C735003146C5 /* StorageManager.swiff.swift */,
-				F852C6EE29FB457600AD45C7 /* MessageConverter.swift */,
-				24B8DF5E29FB9A2E00AAF134 /* PhotoViewerViewController.swift */,
 				F852C6F029FB492900AD45C7 /* MainTabBarController.swift */,
 				E98E88C229364BD200B4C2B6 /* Assets.xcassets */,
 				E98E88C429364BD200B4C2B6 /* LaunchScreen.storyboard */,
@@ -203,6 +206,7 @@
 				24E9CE44295EE0C400A1C7B2 /* GoogleService-Info.plist */,
 				E96C6A522938EE6400EF604A /* Metrics.swift */,
 				F852C6E029FB36AB00AD45C7 /* String+Safe.swift */,
+				247E75AD29FF209D00074BEC /* Notifications.swift */,
 			);
 			path = Messenger;
 			sourceTree = "<group>";
@@ -210,6 +214,7 @@
 		E9E4787C293E464000FF7127 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				E96C6A5C293A385300EF604A /* LoginWithGoogleView.swift */,
 				E98E88D129364C0600B4C2B6 /* LoginViewController.swift */,
 				E9E4787E293E468C00FF7127 /* LoginView.swift */,
 			);
@@ -219,6 +224,7 @@
 		F852C6DB29FB29DC00AD45C7 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F852C6EE29FB457600AD45C7 /* MessageConverter.swift */,
 				F852C6DC29FB29E700AD45C7 /* SearchResult.swift */,
 				F852C6DE29FB326900AD45C7 /* User.swift */,
 				F852C6E229FB382300AD45C7 /* Conversation.swift */,
@@ -355,13 +361,13 @@
 				24D7724A295D289300C82FE4 /* RegisterView.swift in Sources */,
 				24783BD629664EE1008349D0 /* NewChatViewController.swift in Sources */,
 				24D92B3629F13CDD007CF86A /* DatabaseManager.swift in Sources */,
-				24783BDD2966562D008349D0 /* ChatView.swift in Sources */,
 				E98E88D229364C0600B4C2B6 /* LoginViewController.swift in Sources */,
 				F852C6E329FB382300AD45C7 /* Conversation.swift in Sources */,
 				F852C6E729FB396700AD45C7 /* Message.swift in Sources */,
 				F852C6EF29FB457600AD45C7 /* MessageConverter.swift in Sources */,
 				F852C6EB29FB398F00AD45C7 /* Media.swift in Sources */,
 				F852C6E929FB397D00AD45C7 /* Sender.swift in Sources */,
+				247E75AA29FE123F00074BEC /* ChatDataController.swift in Sources */,
 				240967C4296508B700DE3863 /* ProfileViewController.swift in Sources */,
 				E9E4787F293E468C00FF7127 /* LoginView.swift in Sources */,
 				24783BDB2966561E008349D0 /* ChatViewController.swift in Sources */,
@@ -369,8 +375,10 @@
 				F852C6E529FB383200AD45C7 /* LatestMessage.swift in Sources */,
 				E96C6A59293A383600EF604A /* PersonalDataViewFactory.swift in Sources */,
 				E96C6A532938EE6400EF604A /* Metrics.swift in Sources */,
+				247E75AE29FF209D00074BEC /* Notifications.swift in Sources */,
 				E98E88BA29364BCD00B4C2B6 /* AppDelegate.swift in Sources */,
 				F852C6DD29FB29E700AD45C7 /* SearchResult.swift in Sources */,
+				247E75AC29FE4C8800074BEC /* RegisterDataController.swift in Sources */,
 				F852C6ED29FB39D900AD45C7 /* MessageKind+String.swift in Sources */,
 				F852C6DA29FB238700AD45C7 /* NewChatTableViewCell.swift in Sources */,
 				E96C6A5D293A385300EF604A /* LoginWithGoogleView.swift in Sources */,
