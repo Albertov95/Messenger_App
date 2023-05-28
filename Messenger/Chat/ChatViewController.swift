@@ -20,7 +20,7 @@ final class ChatViewController: MessagesViewController {
         )
     }
     
-    private let dataController = ChatDataController()
+    private let dataController = ChatDataManager()
     
     private let spinner = JGProgressHUD(style: .dark)
     

@@ -1,14 +1,14 @@
 import UIKit
 import FirebaseAuth
 
-protocol RegisterDataControllerDelegate: AnyObject {
+protocol RegisterDataManagerDelegate: AnyObject {
     func handleUserExistsRegistrationError()
     func handleRegistrationError()
 }
 
-final class RegisterDataController {
+final class RegisterDataManager {
     
-    weak var delegate: RegisterDataControllerDelegate?
+    weak var delegate: RegisterDataManagerDelegate?
     
     func registerUser(
         email: String,
@@ -49,7 +49,6 @@ final class RegisterDataController {
                         }
                     }
                 }
-                
                 completion(email)
             }
         }

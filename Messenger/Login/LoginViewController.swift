@@ -1,18 +1,14 @@
 import UIKit
-import FirebaseAuth
 import JGProgressHUD
-import GoogleSignIn
-import FirebaseCore
 
 final class LoginViewController: UIViewController {
     
     private let mainView = LoginView()
+    private let dataController = LoginDataManager()
     
     private let spinner = JGProgressHUD(style: .dark)
     
     override func loadView() {
-        super.loadView()
-        
         view = mainView
     }
     
@@ -20,6 +16,8 @@ final class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        
+        dataController.delegate = self
         
         view.addSubview(spinner)
         
@@ -47,9 +45,7 @@ final class LoginViewController: UIViewController {
         
         mainView.emailTextField.delegate = self
         mainView.passwordTextField.delegate = self
-        
-        mainView.loginButton.setTitle("Login", for: .normal)
-        
+
         mainView.socialNetworksView.googleButton.addTarget(self, action: #selector(googleSignInButtonTapped), for: .touchDown)
     }
     
@@ -71,39 +67,20 @@ final class LoginViewController: UIViewController {
         
         if email.count < 5 || password.count < 5 {
             showAlert(title: "Ошибка", message: "Минимальная длина 5 символов")
+            return
         }
 
         spinner.show(in: view)
-        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+        
+        dataController.loginUser(
+            email: email,
+            password: password
+        ) { [weak self] in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
                 self.spinner.dismiss()
             }
-            
-            guard result != nil, error == nil else {
-                self.showAlert(title: "Ошибка", message: "Неверный логин или пароль")
-                return
-            }
-
-            let safeEmail = email.safe
-            
-            DatabaseManager.shared.getDataFor(path: safeEmail) { result in
-                switch result{
-                case .success(let data):
-                    guard let userData = data as? [String: Any],
-                          let firstName = userData["first_name"] as? String
-                    else {
-                        return
-                    }
-                    UserDefaults.standard.set(firstName, forKey: "name")
-                    
-                case .failure(let error):
-                    print("failed to read data with error: \(error)")
-                }
-            }
-            
-            UserDefaults.standard.set(email, forKey: "email")
             
             NotificationCenter.default.post(name: Notifications.loginDidFinish, object: nil)
         }
@@ -111,74 +88,8 @@ final class LoginViewController: UIViewController {
     
     @objc
     private func googleSignInButtonTapped() {
-        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-
-        GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
-        
-        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
-            guard error == nil else {
-                return
-            }
-            
-            guard let user = result?.user,
-                  let idToken = user.idToken?.tokenString,
-                  let email = user.profile?.email,
-                  let firstName = user.profile?.givenName
-            else {
-                return
-            }
-            
-            UserDefaults.standard.set(email, forKey: "email")
-            UserDefaults.standard.set(firstName, forKey: "name")
-            
-            DatabaseManager.shared.checkUserExists(email: email) { exists in
-                guard !exists else { return }
-                
-                let chatUser = User(
-                    firstName: firstName,
-                    emailAddress: email
-                )
-                DatabaseManager.shared.insertUser(with: chatUser) { success in
-                    guard success,
-                          user.profile?.hasImage == true,
-                          let url = user.profile?.imageURL(withDimension: 200)
-                    else { return }
-                    
-                    URLSession.shared.dataTask(with: url, completionHandler: { data, _,_ in
-                        guard let data = data else {
-                            print("Failed to get data from facebook")
-                            return
-                        }
-                        
-                        let filename = chatUser.profilePictureFileName
-                        StorageManager.shared.uploadProfilePicture(with: data, fileName: filename) { result in
-                            switch result {
-                            case .success(let downloadUrl):
-                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-                                print(downloadUrl)
-                            case .failure(let error):
-                                print("Storage manager error: \(error)")
-                            }
-                        }
-                    }).resume()
-                }
-            }
-            
-            let credential = GoogleAuthProvider.credential(
-                withIDToken: idToken,
-                accessToken: user.accessToken.tokenString
-            )
-            
-            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] result, error in
-                guard let self = self else { return }
-                
-                guard result != nil, error == nil else {
-                    self.showAlert(title: "Ошибка", message: "Неверный логин или пароль")
-                    return
-                }
-                
-                self.dismiss(animated: false)
-            }
+        dataController.googleSignIn(viewController: self) { [weak self] in
+            self?.dismiss(animated: false)
         }
     }
     
@@ -205,5 +116,13 @@ extension LoginViewController: UITextFieldDelegate {
             loginButtonTapped()
         }
         return true
+    }
+}
+
+extension LoginViewController: LoginDataManagerDelegate {
+    
+    func handleUserLoginError() {
+        spinner.dismiss()
+        showAlert(title: "Ошибка", message: "Неверный логин или пароль")
     }
 }

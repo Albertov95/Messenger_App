@@ -1,6 +1,6 @@
 import UIKit
 
-final class ChatDataController {
+final class ChatDataManager {
     
     private lazy var dateFormatter: DateFormatter = {
         let formattre = DateFormatter()
@@ -131,7 +131,7 @@ final class ChatDataController {
 }
 
 // MARK: - Message
-extension ChatDataController {
+extension ChatDataManager {
     
     func sendNewMessage(
         sender: Sender,

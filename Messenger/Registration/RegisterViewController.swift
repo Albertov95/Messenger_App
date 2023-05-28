@@ -3,7 +3,7 @@ import UIKit
 final class RegisterViewController: UIViewController {
     
     private let mainView = RegisterView()
-    private let dataController = RegisterDataController()
+    private let dataController = RegisterDataManager()
     
     // MARK: - Lifecycle
     override func loadView() {
@@ -161,7 +161,7 @@ extension RegisterViewController: UITextFieldDelegate {
 }
 
 // MARK: - RegisterDataControllerDelegate
-extension RegisterViewController: RegisterDataControllerDelegate {
+extension RegisterViewController: RegisterDataManagerDelegate {
     
     func handleUserExistsRegistrationError() {
         showAlert(title: "Ошибка", message: "Пользователь уже существует")

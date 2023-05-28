@@ -9,10 +9,11 @@
 /* Begin PBXBuildFile section */
 		240967C4296508B700DE3863 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240967C3296508B700DE3863 /* ProfileViewController.swift */; };
 		240967C6296508CB00DE3863 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240967C5296508CB00DE3863 /* ProfileView.swift */; };
+		246DFE572A22A84C004D3365 /* LoginDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246DFE562A22A84C004D3365 /* LoginDataManager.swift */; };
 		24783BD629664EE1008349D0 /* NewChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24783BD529664EE1008349D0 /* NewChatViewController.swift */; };
 		24783BDB2966561E008349D0 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24783BDA2966561E008349D0 /* ChatViewController.swift */; };
-		247E75AA29FE123F00074BEC /* ChatDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75A929FE123F00074BEC /* ChatDataController.swift */; };
-		247E75AC29FE4C8800074BEC /* RegisterDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AB29FE4C8800074BEC /* RegisterDataController.swift */; };
+		247E75AA29FE123F00074BEC /* ChatDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75A929FE123F00074BEC /* ChatDataManager.swift */; };
+		247E75AC29FE4C8800074BEC /* RegisterDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AB29FE4C8800074BEC /* RegisterDataManager.swift */; };
 		247E75AE29FF209D00074BEC /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AD29FF209D00074BEC /* Notifications.swift */; };
 		247E75B029FF508000074BEC /* LoginCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75AF29FF508000074BEC /* LoginCoordinator.swift */; };
 		247E75B229FF50F100074BEC /* ChatFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E75B129FF50F100074BEC /* ChatFlowCoordinator.swift */; };
@@ -51,10 +52,11 @@
 /* Begin PBXFileReference section */
 		240967C3296508B700DE3863 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		240967C5296508CB00DE3863 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		246DFE562A22A84C004D3365 /* LoginDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginDataManager.swift; sourceTree = "<group>"; };
 		24783BD529664EE1008349D0 /* NewChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatViewController.swift; sourceTree = "<group>"; };
 		24783BDA2966561E008349D0 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
-		247E75A929FE123F00074BEC /* ChatDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDataController.swift; sourceTree = "<group>"; };
-		247E75AB29FE4C8800074BEC /* RegisterDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterDataController.swift; sourceTree = "<group>"; };
+		247E75A929FE123F00074BEC /* ChatDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDataManager.swift; sourceTree = "<group>"; };
+		247E75AB29FE4C8800074BEC /* RegisterDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterDataManager.swift; sourceTree = "<group>"; };
 		247E75AD29FF209D00074BEC /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		247E75AF29FF508000074BEC /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
 		247E75B129FF50F100074BEC /* ChatFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFlowCoordinator.swift; sourceTree = "<group>"; };
@@ -138,7 +140,7 @@
 			children = (
 				24B8DF5E29FB9A2E00AAF134 /* PhotoViewerViewController.swift */,
 				24783BDA2966561E008349D0 /* ChatViewController.swift */,
-				247E75A929FE123F00074BEC /* ChatDataController.swift */,
+				247E75A929FE123F00074BEC /* ChatDataManager.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -148,7 +150,7 @@
 			children = (
 				24D77247295D286A00C82FE4 /* RegisterViewController.swift */,
 				24D77249295D289300C82FE4 /* RegisterView.swift */,
-				247E75AB29FE4C8800074BEC /* RegisterDataController.swift */,
+				247E75AB29FE4C8800074BEC /* RegisterDataManager.swift */,
 			);
 			path = Registration;
 			sourceTree = "<group>";
@@ -223,6 +225,7 @@
 				E98E88D129364C0600B4C2B6 /* LoginViewController.swift */,
 				E9E4787E293E468C00FF7127 /* LoginView.swift */,
 				247E75AF29FF508000074BEC /* LoginCoordinator.swift */,
+				246DFE562A22A84C004D3365 /* LoginDataManager.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -374,7 +377,7 @@
 				F852C6EF29FB457600AD45C7 /* MessageConverter.swift in Sources */,
 				F852C6EB29FB398F00AD45C7 /* Media.swift in Sources */,
 				F852C6E929FB397D00AD45C7 /* Sender.swift in Sources */,
-				247E75AA29FE123F00074BEC /* ChatDataController.swift in Sources */,
+				247E75AA29FE123F00074BEC /* ChatDataManager.swift in Sources */,
 				240967C4296508B700DE3863 /* ProfileViewController.swift in Sources */,
 				E9E4787F293E468C00FF7127 /* LoginView.swift in Sources */,
 				24783BDB2966561E008349D0 /* ChatViewController.swift in Sources */,
@@ -384,9 +387,10 @@
 				E96C6A532938EE6400EF604A /* Metrics.swift in Sources */,
 				247E75AE29FF209D00074BEC /* Notifications.swift in Sources */,
 				E98E88BA29364BCD00B4C2B6 /* AppDelegate.swift in Sources */,
+				246DFE572A22A84C004D3365 /* LoginDataManager.swift in Sources */,
 				247E75B229FF50F100074BEC /* ChatFlowCoordinator.swift in Sources */,
 				F852C6DD29FB29E700AD45C7 /* SearchResult.swift in Sources */,
-				247E75AC29FE4C8800074BEC /* RegisterDataController.swift in Sources */,
+				247E75AC29FE4C8800074BEC /* RegisterDataManager.swift in Sources */,
 				F852C6ED29FB39D900AD45C7 /* MessageKind+String.swift in Sources */,
 				F852C6DA29FB238700AD45C7 /* NewChatTableViewCell.swift in Sources */,
 				E96C6A5D293A385300EF604A /* LoginWithGoogleView.swift in Sources */,
